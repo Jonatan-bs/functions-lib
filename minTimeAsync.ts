@@ -1,8 +1,17 @@
+/**
+ * 
+ * @param minTime <number> minimum time before finisf
+ * @param fn <function> async function
+ * @param onError <function> what to do on error
+ * @param onSuccess <function> what to do on success. has response param
+ * @param loadStart <function> what to do while loading. has error param
+ * 
+ */
 
 class MinTimeAsync {
 	public timer;
 	public minTimeWaited: boolean = false;
-	public response: boolean = false;
+	public response;
 	public error: boolean = false;
 
 	public minTime: number;
@@ -11,7 +20,7 @@ class MinTimeAsync {
 	public onSuccess;
 	public loadStart;
 
-
+	
 	constructor({minTime, fn, onError, onSuccess, loadStart}) {
 
 		this.fn = fn;
@@ -25,9 +34,9 @@ class MinTimeAsync {
 			if(!this.response && !this.error) return
 		
 			if(this.error){
-				onError()
+				onError(this.error)
 			} else if(this.response){
-				onSuccess()
+				onSuccess(this.response)
 			}
 		},minTime)
 		this.excecute();
@@ -39,22 +48,20 @@ class MinTimeAsync {
 		try{
 			this.loadStart()
 			
-			this.response = !!await this.fn()
+			this.response = await this.fn()
 			
 			
 			if(this.error){
-				this.onError();
+				this.onError(this.error);
 			} else{
-				this.onSuccess()
+				this.onSuccess(this.response)
 			}
 			
 		} catch(err){
 			
-			// Error message
-			console.log(err)
-			this.error = true;
+			this.error = err;
 			if(this.minTimeWaited){
-				this.onError()
+				this.onError(this.error)
 			} 
 		
 		}
