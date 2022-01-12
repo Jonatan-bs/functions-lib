@@ -1,5 +1,7 @@
 /**
- * 
+ *
+ * Set minimum time on async functions
+ *
  * @param minTime <number> minimum time before finisf
  * @param fn <function> async function
  * @param onError <function> what to do on error
